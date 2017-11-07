@@ -20,13 +20,16 @@ public class EnemySpawner : MonoBehaviour {
         Vector3 rightBoundary = Camera.main.ViewportToWorldPoint(new Vector3(1, 0, distanceToCamera));
         xmax = rightBoundary.x;
         xmin = leftBoundary.x;
+        SpawnEnemies();
 
-        foreach (Transform child in transform)
-        {
+    }
+
+    void SpawnEnemies()
+    {
+        foreach (Transform child in transform)  {
             GameObject enemy = Instantiate(enemyPrefab,
             child.transform.position,
             Quaternion.identity) as GameObject;
-
             enemy.transform.parent = child;
         }
     }
@@ -53,6 +56,27 @@ public class EnemySpawner : MonoBehaviour {
         }else if (rightBoundaryOfFormation > xmax)
         {
             movingRight = false;
-        }     
+        }
+        if (AllMembersDead())
+        {
+            Debug.Log("Empty Formation");
+            SpawnEnemies();
+        }
     }
+
+    bool AllMembersDead()
+    {
+        
+        foreach (Transform childPositionGameObject in transform)
+        {
+            if (childPositionGameObject.childCount > 0)
+            {
+                return false;
+            }
+        }
+        return true;
+
+    }
+
+       
 }
